@@ -148,18 +148,6 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
 
-        .btn-reveal {
-            background: linear-gradient(135deg, #38b2ac 0%, #319795 100%);
-            color: white;
-            box-shadow: 0 4px 15px rgba(56, 178, 172, 0.3);
-            width: 100%;
-        }
-
-        .btn-reveal:hover, .btn-reveal:active {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(56, 178, 172, 0.4);
-        }
-
         .btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
@@ -258,24 +246,6 @@
             color: #2d3748;
         }
 
-        .tts-method-selector {
-            margin-bottom: 20px;
-        }
-
-        .tts-method-selector label {
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
-            cursor: pointer;
-            font-weight: normal;
-            text-transform: none;
-            letter-spacing: normal;
-        }
-
-        .tts-method-selector input[type="radio"] {
-            margin-right: 10px;
-        }
-
         .error-message {
             margin-top: 15px;
             padding: 12px 16px;
@@ -325,6 +295,49 @@
 
         .toggle-header.active .toggle-arrow {
             transform: rotate(90deg);
+        }
+
+        .voice-selector {
+            margin-bottom: 15px;
+        }
+
+        .voice-list {
+            max-height: 120px;
+            overflow-y: auto;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 5px;
+        }
+
+        .voice-option {
+            display: flex;
+            align-items: center;
+            padding: 5px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+
+        .voice-option:hover {
+            background: #f7fafc;
+        }
+
+        .voice-option input {
+            margin-right: 8px;
+        }
+
+        .tts-method-selector label {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            cursor: pointer;
+            font-weight: normal;
+            text-transform: none;
+            letter-spacing: normal;
+        }
+
+        .tts-method-selector input[type="radio"] {
+            margin-right: 10px;
         }
 
         @media (max-width: 480px) {
@@ -399,8 +412,6 @@
             </div>
         </div>
 
-        
-
         <div class="form-group">
             <label for="language" class="form-label">Language</label>
             <select id="language" class="form-select">
@@ -419,18 +430,11 @@
                 <span class="toggle-arrow">▶</span>
             </div>
             <div class="toggle-content" id="advancedContent">
-                <div class="form-group tts-method-selector">
-                    <div class="form-label">TTS Method</div>
-                    <label>
-                        <input type="radio" name="ttsMethod" value="speechSynthesis" checked>
-                        Browser TTS (Recommended for mobile)
-                    </label>
-                    <label>
-                        <input type="radio" name="ttsMethod" value="google">
-                        Google TTS (May not work on all browsers)
-                    </label>
-					
-					
+                <div class="form-group voice-selector">
+                    <div class="form-label">Voice Selection</div>
+                    <div class="voice-list" id="voiceList">
+                        <div>Loading voices...</div>
+                    </div>
                 </div>
 
                 <div class="form-group">
@@ -440,23 +444,22 @@
                         <span id="speedDisplay" class="speed-display">1x</span>
                     </div>
                 </div>
-				
-				
-				<div class="form-group">
-					<label class="form-label">Sequence Length</label>
-					<div class="speed-control">
-						<input type="range" id="sequenceSlider" class="speed-slider" min="1" max="10" step="1" value="1">
-						<span id="sequenceDisplay" class="speed-display">1</span>
-					</div>
-				</div>
-				
-				<div class="form-group" id="delaySection">
-					<label class="form-label">Delay Between Numbers</label>
-					<div class="speed-control">
-						<input type="range" id="delaySlider" class="speed-slider" min="0.5" max="3" step="0.1" value="1">
-						<span id="delayDisplay" class="speed-display">1x</span>
-					</div>
-				</div>
+                
+                <div class="form-group">
+                    <label class="form-label">Sequence Length</label>
+                    <div class="speed-control">
+                        <input type="range" id="sequenceSlider" class="speed-slider" min="1" max="10" step="1" value="1">
+                        <span id="sequenceDisplay" class="speed-display">1</span>
+                    </div>
+                </div>
+                
+                <div class="form-group" id="delaySection">
+                    <label class="form-label">Delay Between Numbers</label>
+                    <div class="speed-control">
+                        <input type="range" id="delaySlider" class="speed-slider" min="0.5" max="3" step="0.1" value="1">
+                        <span id="delayDisplay" class="speed-display">1x</span>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -465,7 +468,7 @@
                 🔊 Play random number
             </button>
             <button id="repeatBtn" class="btn btn-secondary" disabled aria-label="Repeat the current number sequence">
-                🔁 Repeat
+                🔄 Repeat
             </button>
         </div>
 
@@ -500,48 +503,28 @@
                 this.currentSpeed = 1;
                 this.currentLanguage = 'en';
                 this.sequenceLength = 1;
-                this.delayBetweenNumbers = 500; // Base delay for 1x multiplier (accounting for natural speech pause)
+                this.delayBetweenNumbers = 500;
                 this.isSequenceRevealed = false;
                 this.isPlaying = false;
-                this.currentAudioQueue = [];
                 this.hasGeneratedSequence = false;
-                this.ttsMethod = 'speechSynthesis';
                 this.speechSynthesis = window.speechSynthesis;
                 this.availableVoices = [];
+                this.selectedVoice = null;
                 this.voicesLoaded = false;
+                
                 this.initializeElements();
-                this.initializeVoices();
                 this.bindEvents();
+                this.initializeVoices();
                 this.updateButtonTexts();
                 this.updateNumberRange();
-                this.toggleDelaySection(); // Initialize delay section visibility
-                this.initializeSliderDisplays(); // Fix initial slider positions
+                this.toggleDelaySection();
+                this.initializeSliderDisplays();
             }
             
             initializeSliderDisplays() {
-                // Ensure all slider displays match their initial values
                 this.updateSpeed();
                 this.updateSequenceLength();
                 this.updateDelay();
-            }
-
-            initializeElements() {
-            }
-
-            initializeVoices() {
-                // Handle voices loading for speechSynthesis
-                if (this.speechSynthesis) {
-                    const loadVoices = () => {
-                        this.availableVoices = this.speechSynthesis.getVoices();
-                        this.voicesLoaded = this.availableVoices.length > 0;
-                    };
-                    
-                    // Load voices immediately if available
-                    loadVoices();
-                    
-                    // Also listen for voices changed event (required for Chrome)
-                    this.speechSynthesis.onvoiceschanged = loadVoices;
-                }
             }
 
             initializeElements() {
@@ -560,8 +543,153 @@
                 this.delaySection = document.getElementById('delaySection');
                 this.numberDisplay = document.getElementById('numberDisplay');
                 this.errorMessage = document.getElementById('errorMessage');
-                this.ttsMethodRadios = document.querySelectorAll('input[name="ttsMethod"]');
                 this.customRangeSection = document.getElementById('customRangeSection');
+                this.voiceList = document.getElementById('voiceList');
+            }
+
+            async initializeVoices() {
+                if (!this.speechSynthesis) {
+                    this.showError('Text-to-speech not supported in this browser');
+                    return;
+                }
+
+                // Wait for voices to load
+                const loadVoices = () => {
+                    this.availableVoices = this.speechSynthesis.getVoices();
+                    if (this.availableVoices.length > 0) {
+                        this.voicesLoaded = true;
+                        this.renderVoiceSelector();
+                        this.selectBestVoice();
+                    }
+                };
+
+                // Try to load voices immediately
+                loadVoices();
+
+                // Also listen for the voices changed event
+                this.speechSynthesis.onvoiceschanged = loadVoices;
+
+                // Fallback: wait a bit and try again if no voices loaded
+                if (!this.voicesLoaded) {
+                    setTimeout(() => {
+                        if (!this.voicesLoaded) {
+                            loadVoices();
+                        }
+                    }, 1000);
+                }
+            }
+
+            renderVoiceSelector() {
+                if (this.availableVoices.length === 0) {
+                    this.voiceList.innerHTML = '<div>No voices available</div>';
+                    return;
+                }
+
+                const currentLang = this.languageSelect.value;
+                
+                // Filter and group voices by language
+                const languageVoices = this.availableVoices.filter(voice => {
+                    const voiceLang = voice.lang.toLowerCase().substring(0, 2);
+                    return voiceLang === currentLang;
+                });
+
+                const englishVoices = this.availableVoices.filter(voice => {
+                    const voiceLang = voice.lang.toLowerCase().substring(0, 2);
+                    return voiceLang === 'en' && currentLang !== 'en';
+                });
+
+                const otherVoices = this.availableVoices.filter(voice => {
+                    const voiceLang = voice.lang.toLowerCase().substring(0, 2);
+                    return voiceLang !== currentLang && voiceLang !== 'en';
+                });
+
+                this.voiceList.innerHTML = '';
+
+                const addVoiceOption = (voice, isRecommended = false) => {
+                    const option = document.createElement('div');
+                    option.className = 'voice-option';
+                    
+                    const radio = document.createElement('input');
+                    radio.type = 'radio';
+                    radio.name = 'voice';
+                    radio.value = voice.name;
+                    radio.id = `voice-${voice.name}`;
+                    
+                    const label = document.createElement('label');
+                    label.htmlFor = radio.id;
+                    label.style.cursor = 'pointer';
+                    label.style.flex = '1';
+                    
+                    const voiceName = voice.name.length > 30 ? voice.name.substring(0, 30) + '...' : voice.name;
+                    label.textContent = `${voiceName} (${voice.lang})${isRecommended ? ' ⭐' : ''}`;
+                    
+                    radio.addEventListener('change', () => {
+                        if (radio.checked) {
+                            this.selectedVoice = voice;
+                        }
+                    });
+                    
+                    option.appendChild(radio);
+                    option.appendChild(label);
+                    this.voiceList.appendChild(option);
+                    
+                    return radio;
+                };
+
+                // Add current language voices first (recommended)
+                if (languageVoices.length > 0) {
+                    languageVoices.forEach(voice => addVoiceOption(voice, true));
+                }
+
+                // Add English voices as fallback
+                if (englishVoices.length > 0) {
+                    englishVoices.forEach(voice => addVoiceOption(voice, false));
+                }
+
+                // Add other voices
+                if (otherVoices.length > 0 && languageVoices.length === 0) {
+                    otherVoices.slice(0, 5).forEach(voice => addVoiceOption(voice, false));
+                }
+            }
+
+            selectBestVoice() {
+                if (this.availableVoices.length === 0) return;
+
+                const currentLang = this.languageSelect.value;
+                
+                // Try to find the best voice for the current language
+                let bestVoice = this.availableVoices.find(voice => {
+                    const voiceLang = voice.lang.toLowerCase();
+                    return voiceLang === this.mapLanguageCode(currentLang).toLowerCase() && !voice.name.includes('Google');
+                });
+
+                if (!bestVoice) {
+                    bestVoice = this.availableVoices.find(voice => {
+                        return voice.lang.toLowerCase().startsWith(currentLang) && !voice.name.includes('Google');
+                    });
+                }
+
+                if (!bestVoice) {
+                    bestVoice = this.availableVoices.find(voice => {
+                        return voice.lang.toLowerCase().startsWith('en') && !voice.name.includes('Google');
+                    });
+                }
+
+                if (!bestVoice) {
+                    bestVoice = this.availableVoices.find(voice => !voice.name.includes('Google'));
+                }
+
+                if (!bestVoice) {
+                    bestVoice = this.availableVoices[0];
+                }
+
+                this.selectedVoice = bestVoice;
+
+                // Update radio button selection
+                const radio = document.querySelector(`input[value="${bestVoice.name}"]`);
+                if (radio) {
+                    radio.checked = true;
+                }
             }
 
             bindEvents() {
@@ -572,15 +700,6 @@
                 this.delaySlider.addEventListener('input', () => this.updateDelay());
                 this.languageSelect.addEventListener('change', () => this.updateLanguage());
                 this.digitsSelect.addEventListener('change', () => this.updateNumberRange());
-                
-                // TTS method selection
-                this.ttsMethodRadios.forEach(radio => {
-                    radio.addEventListener('change', (e) => {
-                        if (e.target.checked) {
-                            this.ttsMethod = e.target.value;
-                        }
-                    });
-                });
                 
                 // Keyboard event listener
                 document.addEventListener('keydown', (e) => this.handleKeyPress(e));
@@ -599,7 +718,7 @@
                 const key = event.key.toLowerCase();
                 
                 if (key === ' ') {
-                    event.preventDefault(); // Prevent scroll first
+                    event.preventDefault();
                     this.handleSpacebarPress();
                 } else if (key === 'r') {
                     event.preventDefault();
@@ -609,10 +728,8 @@
 
             handleMainButtonClick() {
                 if (!this.hasGeneratedSequence || this.isSequenceRevealed) {
-                    // Generate and play new sequence
                     this.playRandomSequence();
                 } else {
-                    // Reveal current sequence
                     this.revealSequence();
                 }
             }
@@ -633,10 +750,8 @@
                 if (digits === 'custom') {
                     this.customRangeSection.style.display = 'block';
                 } else {
-                    // Hide custom range section completely
                     this.customRangeSection.style.display = 'none';
                     
-                    // Set predefined ranges
                     const ranges = {
                         '1': { min: 0, max: 9 },
                         '2': { min: 10, max: 99 },
@@ -676,22 +791,11 @@
             async stopCurrentAudio() {
                 this.isPlaying = false;
                 
-                // Stop speech synthesis
                 if (this.speechSynthesis) {
                     this.speechSynthesis.cancel();
                 }
                 
-                // Stop Google TTS audio
-                this.currentAudioQueue.forEach(audio => {
-                    if (audio && !audio.paused) {
-                        audio.pause();
-                        audio.currentTime = 0;
-                    }
-                });
-                this.currentAudioQueue = [];
-                
-                // Small delay to ensure everything stops
-                await this.sleep(50);
+                await this.sleep(100);
             }
 
             async playRandomSequence() {
@@ -720,12 +824,12 @@
                 if (this.currentSequence !== null) {
                     this.isSequenceRevealed = true;
                     this.showSequence(this.currentSequence);
-                    this.updateMainButtonText(); // Update button to show "Play" again
+                    this.updateMainButtonText();
                 }
             }
 
             async speakSequence() {
-                if (this.currentSequence === null) return;
+                if (this.currentSequence === null || !this.speechSynthesis) return;
                 
                 this.isPlaying = true;
                 
@@ -734,13 +838,9 @@
                 }
                 
                 try {
-                    if (this.ttsMethod === 'speechSynthesis') {
-                        await this.speakWithSpeechSynthesis();
-                    } else {
-                        await this.speakWithGoogleTTS();
-                    }
+                    await this.speakWithSpeechSynthesis();
                 } catch (e) {
-                    this.showError(`TTS Error: ${e.message || 'Unable to play audio. Try switching TTS method.'}`);
+                    this.showError(`TTS Error: ${e.message || 'Unable to play audio'}`);
                 }
                 
                 this.isPlaying = false;
@@ -752,25 +852,28 @@
 
             async speakWithSpeechSynthesis() {
                 if (!this.speechSynthesis) {
-                    throw new Error('Browser TTS not supported');
+                    throw new Error('Speech synthesis not supported');
                 }
 
-                // Wait for voices to load if they haven't yet
+                // Wait for voices to load
                 if (!this.voicesLoaded) {
                     await new Promise(resolve => {
-                        if (this.availableVoices.length > 0) {
-                            resolve();
-                        } else {
-                            this.speechSynthesis.onvoiceschanged = () => {
-                                this.availableVoices = this.speechSynthesis.getVoices();
+                        let attempts = 0;
+                        const checkVoices = () => {
+                            this.availableVoices = this.speechSynthesis.getVoices();
+                            if (this.availableVoices.length > 0 || attempts > 20) {
                                 this.voicesLoaded = true;
+                                this.selectBestVoice();
                                 resolve();
-                            };
-                        }
+                            } else {
+                                attempts++;
+                                setTimeout(checkVoices, 100);
+                            }
+                        };
+                        checkVoices();
                     });
                 }
 
-                const lang = this.languageSelect.value;
                 const speed = parseFloat(this.speedSlider.value);
                 
                 for (let i = 0; i < this.currentSequence.length && this.isPlaying; i++) {
@@ -779,242 +882,6 @@
                     await new Promise((resolve, reject) => {
                         const utterance = new SpeechSynthesisUtterance(number.toString());
                         
-                        utterance.lang = this.mapLanguageCode(lang);
-                        utterance.rate = speed;
-                        utterance.volume = 1;
-                        utterance.pitch = 1;
-                        
-                        // Use pre-loaded voices
-                        const voice = this.availableVoices.find(v => v.lang.startsWith(lang)) || 
-                                    this.availableVoices.find(v => v.lang.startsWith('en')) ||
-                                    this.availableVoices[0];
-                        
-                        if (voice) {
-                            utterance.voice = voice;
-                        }
-                        
-                        utterance.onend = () => {
-                            if (i < this.currentSequence.length - 1) {
-                                // Don't subtract from delay since we've already accounted for natural pause
-                                setTimeout(resolve, this.delayBetweenNumbers);
-                            } else {
-                                setTimeout(resolve, 50);
-                            }
-                        };
-                        
-                        utterance.onerror = (e) => {
-                            reject(new Error(`Speech synthesis error: ${e.error}`));
-                        };
-                        
-                        if (!this.isPlaying) {
-                            resolve();
-                            return;
-                        }
-                        
-                        this.speechSynthesis.speak(utterance);
-                    });
-                }
-            }
-
-            async speakWithGoogleTTS() {
-                const lang = this.languageSelect.value;
-                const speed = parseFloat(this.speedSlider.value);
-                
-                for (let i = 0; i < this.currentSequence.length && this.isPlaying; i++) {
-                    const number = this.currentSequence[i];
-                    const url = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(number)}&tl=${lang}&client=tw-ob`;
-                    
-                    try {
-                        await this.playAudioWithPromise(url, speed);
-                        if (i < this.currentSequence.length - 1 && this.isPlaying) {
-                            await this.sleep(this.delayBetweenNumbers);
-                        }
-                    } catch (e) {
-                        throw new Error('Google TTS failed to load audio');
-                    }
-                }
-            }
-
-            mapLanguageCode(code) {
-                const mapping = {
-                    'en': 'en-US',
-                    'fr': 'fr-FR',
-                    'de': 'de-DE',
-                    'it': 'it-IT',
-                    'pl': 'pl-PL',
-                    'es': 'es-ES'
-                };
-                return mapping[code] || 'en-US';
-            }
-
-            playAudioWithPromise(url, speed) {
-                return new Promise((resolve, reject) => {
-                    if (!this.isPlaying) {
-                        resolve();
-                        return;
-                    }
-                    
-                    const audio = new Audio(url);
-                    audio.playbackRate = speed;
-                    
-                    this.currentAudioQueue.push(audio);
-                    
-                    const cleanup = () => {
-                        const index = this.currentAudioQueue.indexOf(audio);
-                        if (index > -1) {
-                            this.currentAudioQueue.splice(index, 1);
-                        }
-                    };
-                    
-                    audio.addEventListener('ended', () => {
-                        cleanup();
-                        resolve();
-                    });
-                    
-                    audio.addEventListener('error', (e) => {
-                        cleanup();
-                        reject(e);
-                    });
-                    
-                    audio.play().catch(reject);
-                });
-            }
-
-            sleep(ms) {
-                return new Promise(resolve => setTimeout(resolve, ms));
-            }
-
-            showSpeakingIndicator() {
-                this.numberDisplay.textContent = '';
-                const span = document.createElement('span');
-                span.className = 'placeholder-text';
-                span.textContent = '🔊 Speaking...';
-                this.numberDisplay.appendChild(span);
-            }
-
-            hideSpeakingIndicator() {
-                const text = this.sequenceLength === 1 ? 'Number' : 'Sequence';
-                this.numberDisplay.textContent = '';
-                const span = document.createElement('span');
-                span.className = 'placeholder-text';
-                span.textContent = `${text} spoken - click "Reveal" to see it`;
-                this.numberDisplay.appendChild(span);
-            }
-
-            showSequence(sequence) {
-                const displayText = sequence.join(' - ');
-                this.numberDisplay.textContent = '';
-                const span = document.createElement('span');
-                span.className = 'number-text';
-                span.textContent = displayText;
-                this.numberDisplay.appendChild(span);
-                this.numberDisplay.classList.add('has-number');
-            }
-
-            clearDisplay() {
-                this.isSequenceRevealed = false;
-                const text = this.sequenceLength === 1 ? 'number' : 'sequence';
-                this.numberDisplay.textContent = '';
-                const span = document.createElement('span');
-                span.className = 'placeholder-text';
-                span.textContent = `Listen to the ${text}...`;
-                this.numberDisplay.appendChild(span);
-                this.numberDisplay.classList.remove('has-number');
-            }
-
-            enableButtons() {
-                this.repeatBtn.disabled = false;
-                this.updateMainButtonText();
-            }
-
-            updateMainButtonText() {
-                if (!this.hasGeneratedSequence || this.isSequenceRevealed) {
-                    // Show play button
-                    if (this.sequenceLength === 1) {
-                        this.mainBtn.innerHTML = '🔊 Play random number';
-                        this.mainBtn.setAttribute('aria-label', 'Play a random number');
-                    } else {
-                        this.mainBtn.innerHTML = '🔊 Play random sequence';
-                        this.mainBtn.setAttribute('aria-label', 'Play a random number sequence');
-                    }
-                } else {
-                    // Show reveal button
-                    if (this.sequenceLength === 1) {
-                        this.mainBtn.innerHTML = '👁️ Reveal number';
-                        this.mainBtn.setAttribute('aria-label', 'Show the current number');
-                    } else {
-                        this.mainBtn.innerHTML = '👁️ Reveal sequence';
-                        this.mainBtn.setAttribute('aria-label', 'Show the current number sequence');
-                    }
-                }
-            }
-
-            updateSpeed() {
-                this.currentSpeed = parseFloat(this.speedSlider.value);
-                this.speedDisplay.textContent = `${this.currentSpeed}x`;
-            }
-
-            updateSequenceLength() {
-                this.sequenceLength = parseInt(this.sequenceSlider.value);
-                this.sequenceDisplay.textContent = this.sequenceLength.toString();
-                this.updateButtonTexts();
-                this.updateInitialDisplay();
-                this.toggleDelaySection();
-            }
-
-            toggleDelaySection() {
-                if (this.sequenceLength === 1) {
-                    this.delaySection.style.display = 'none';
-                } else {
-                    this.delaySection.style.display = 'block';
-                }
-            }
-
-            updateDelay() {
-                const multiplier = parseFloat(this.delaySlider.value);
-                // Map multipliers to actual delay values that account for natural speech pause
-                if (multiplier <= 0.5) {
-                    this.delayBetweenNumbers = 0; // 0.5x = no additional delay (just natural pause)
-                } else {
-                    // Scale from 0ms (0.5x) to 2000ms (3x) 
-                    this.delayBetweenNumbers = Math.round((multiplier - 0.5) * 800); // 2.5 range * 800 = 2000ms max
-                }
-                this.delayDisplay.textContent = `${multiplier}x`;
-            }
-
-            updateButtonTexts() {
-                // This method now just updates the main button
-                this.updateMainButtonText();
-            }
-
-            updateInitialDisplay() {
-                if (!this.hasGeneratedSequence) {
-                    const text = this.sequenceLength === 1 ? 'number' : 'sequence';
-                    this.numberDisplay.textContent = '';
-                    const span = document.createElement('span');
-                    span.className = 'placeholder-text';
-                    span.textContent = `Press "Play random ${text}" to start`;
-                    this.numberDisplay.appendChild(span);
-                }
-            }
-
-            updateLanguage() {
-                this.currentLanguage = this.languageSelect.value;
-            }
-
-            showError(message) {
-                this.errorMessage.textContent = message;
-                this.errorMessage.style.display = 'block';
-            }
-
-            hideError() {
-                this.errorMessage.style.display = 'none';
-            }
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            new NumberListeningApp();
-        });
-    </script>
-</body>
-</html>
+                        // Configure utterance
+                        utterance.rate = Math.max(0.1, Math.min(2.0, speed));
+                        utterance.volume = 1
