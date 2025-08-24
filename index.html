@@ -87,6 +87,9 @@
             transition: all 0.2s ease;
             background: white;
             color: #2d3748;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
         }
 
         .form-input:focus, .form-select:focus {
@@ -120,6 +123,7 @@
             gap: 8px;
             -webkit-tap-highlight-color: transparent;
             user-select: none;
+            touch-action: manipulation;
         }
 
         .btn-primary {
@@ -128,7 +132,7 @@
             box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
         }
 
-        .btn-primary:hover, .btn-primary:active {
+        .btn-primary:hover:not(:disabled), .btn-primary:active:not(:disabled) {
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
         }
@@ -141,7 +145,7 @@
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
-        .btn-secondary:hover, .btn-secondary:active {
+        .btn-secondary:hover:not(:disabled), .btn-secondary:active:not(:disabled) {
             background: linear-gradient(135deg, #edf2f7 0%, #e2e8f0 100%);
             border-color: #cbd5e0;
             transform: translateY(-1px);
@@ -152,6 +156,7 @@
             opacity: 0.5;
             cursor: not-allowed;
             transform: none !important;
+            box-shadow: none !important;
         }
 
         .speed-control {
@@ -258,6 +263,18 @@
             display: none;
         }
 
+        .success-message {
+            margin-top: 15px;
+            padding: 12px 16px;
+            background: linear-gradient(135deg, #c6f6d5 0%, #9ae6b4 100%);
+            border: 1px solid #68d391;
+            border-radius: 10px;
+            color: #22543d;
+            font-size: 14px;
+            text-align: center;
+            display: none;
+        }
+
         .toggle-section {
             margin-bottom: 20px;
             border: 1px solid #e2e8f0;
@@ -266,7 +283,7 @@
         }
 
         .toggle-header {
-            padding: 12px 16px;
+            padding: 15px 16px;
             background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
             cursor: pointer;
             display: flex;
@@ -274,6 +291,8 @@
             align-items: center;
             font-weight: 600;
             color: #4a5568;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .toggle-header:hover {
@@ -291,6 +310,7 @@
 
         .toggle-arrow {
             transition: transform 0.2s ease;
+            font-size: 12px;
         }
 
         .toggle-header.active .toggle-arrow {
@@ -307,15 +327,17 @@
             border: 1px solid #e2e8f0;
             border-radius: 8px;
             padding: 5px;
+            background: white;
         }
 
         .voice-option {
             display: flex;
             align-items: center;
-            padding: 5px;
+            padding: 8px;
             cursor: pointer;
             border-radius: 4px;
             font-size: 13px;
+            touch-action: manipulation;
         }
 
         .voice-option:hover {
@@ -324,33 +346,54 @@
 
         .voice-option input {
             margin-right: 8px;
+            cursor: pointer;
         }
 
-        .tts-method-selector label {
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
+        .voice-option label {
             cursor: pointer;
+            flex: 1;
             font-weight: normal;
             text-transform: none;
             letter-spacing: normal;
         }
 
-        .tts-method-selector input[type="radio"] {
-            margin-right: 10px;
+        .tts-status {
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 13px;
+            text-align: center;
+        }
+
+        .tts-status.loading {
+            background: #e2e8f0;
+            color: #4a5568;
+        }
+
+        .tts-status.ready {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+
+        .tts-status.error {
+            background: #fed7d7;
+            color: #742a2a;
         }
 
         @media (max-width: 480px) {
             .app-container {
-                padding: 30px 20px;
+                padding: 20px;
+                margin: 10px;
             }
 
             .title {
                 font-size: 24px;
+                margin-bottom: 20px;
             }
 
             .button-row {
                 flex-direction: column;
+                gap: 8px;
             }
 
             .btn-secondary {
@@ -366,14 +409,18 @@
                 width: 100%;
             }
 
-            .input-group label,
-            .form-input,
-            .form-select {
-                text-align: left;
-            }
-
             .number-text {
                 font-size: 28px;
+            }
+
+            .toggle-header {
+                padding: 12px;
+                font-size: 14px;
+            }
+
+            .btn {
+                font-size: 15px;
+                padding: 12px 16px;
             }
         }
     </style>
@@ -425,23 +472,25 @@
         </div>
 
         <div class="toggle-section">
-            <div class="toggle-header" onclick="toggleSection('advanced')">
+            <div class="toggle-header" id="advancedToggle">
                 <span>Advanced settings</span>
                 <span class="toggle-arrow">▶</span>
             </div>
             <div class="toggle-content" id="advancedContent">
+                <div class="tts-status" id="ttsStatus">Loading TTS system...</div>
+                
                 <div class="form-group voice-selector">
                     <div class="form-label">Voice Selection</div>
                     <div class="voice-list" id="voiceList">
-                        <div>Loading voices...</div>
+                        <div style="padding: 10px; text-align: center; color: #718096;">Loading voices...</div>
                     </div>
                 </div>
 
                 <div class="form-group">
                     <label class="form-label">TTS Speed</label>
                     <div class="speed-control">
-                        <input type="range" id="speedSlider" class="speed-slider" min="0.5" max="2" step="0.1" value="1">
-                        <span id="speedDisplay" class="speed-display">1x</span>
+                        <input type="range" id="speedSlider" class="speed-slider" min="0.3" max="1.5" step="0.1" value="0.8">
+                        <span id="speedDisplay" class="speed-display">0.8x</span>
                     </div>
                 </div>
                 
@@ -477,6 +526,7 @@
         </div>
 
         <div class="error-message" id="errorMessage"></div>
+        <div class="success-message" id="successMessage"></div>
 
         <div class="keyboard-hint">
             <strong>Keyboard shortcuts:</strong> Press <strong>Space</strong> to play/reveal • Press <strong>R</strong> to repeat
@@ -484,23 +534,10 @@
     </div>
 
     <script>
-        function toggleSection(sectionName) {
-            const content = document.getElementById(sectionName + 'Content');
-            const header = content.previousElementSibling;
-            
-            if (content.classList.contains('active')) {
-                content.classList.remove('active');
-                header.classList.remove('active');
-            } else {
-                content.classList.add('active');
-                header.classList.add('active');
-            }
-        }
-
         class NumberListeningApp {
             constructor() {
                 this.currentSequence = null;
-                this.currentSpeed = 1;
+                this.currentSpeed = 0.8;
                 this.currentLanguage = 'en';
                 this.sequenceLength = 1;
                 this.delayBetweenNumbers = 500;
@@ -511,11 +548,12 @@
                 this.availableVoices = [];
                 this.selectedVoice = null;
                 this.voicesLoaded = false;
+                this.ttsReady = false;
+                this.loadingTimeout = null;
                 
                 this.initializeElements();
                 this.bindEvents();
                 this.initializeVoices();
-                this.updateButtonTexts();
                 this.updateNumberRange();
                 this.toggleDelaySection();
                 this.initializeSliderDisplays();
@@ -543,52 +581,109 @@
                 this.delaySection = document.getElementById('delaySection');
                 this.numberDisplay = document.getElementById('numberDisplay');
                 this.errorMessage = document.getElementById('errorMessage');
+                this.successMessage = document.getElementById('successMessage');
                 this.customRangeSection = document.getElementById('customRangeSection');
                 this.voiceList = document.getElementById('voiceList');
+                this.advancedToggle = document.getElementById('advancedToggle');
+                this.advancedContent = document.getElementById('advancedContent');
+                this.ttsStatus = document.getElementById('ttsStatus');
             }
 
             async initializeVoices() {
+                this.updateTTSStatus('loading', 'Initializing text-to-speech...');
+                
                 if (!this.speechSynthesis) {
-                    this.showError('Text-to-speech not supported in this browser');
+                    this.updateTTSStatus('error', 'Text-to-speech not supported in this browser');
                     return;
                 }
 
-                // Wait for voices to load
-                const loadVoices = () => {
-                    this.availableVoices = this.speechSynthesis.getVoices();
-                    if (this.availableVoices.length > 0) {
-                        this.voicesLoaded = true;
-                        this.renderVoiceSelector();
-                        this.selectBestVoice();
-                    }
-                };
-
-                // Try to load voices immediately
-                loadVoices();
-
-                // Also listen for the voices changed event
-                this.speechSynthesis.onvoiceschanged = loadVoices;
-
-                // Fallback: wait a bit and try again if no voices loaded
-                if (!this.voicesLoaded) {
-                    setTimeout(() => {
-                        if (!this.voicesLoaded) {
-                            loadVoices();
-                        }
-                    }, 1000);
+                // Clear any previous timeout
+                if (this.loadingTimeout) {
+                    clearTimeout(this.loadingTimeout);
                 }
+
+                // Set a timeout for voice loading
+                this.loadingTimeout = setTimeout(() => {
+                    if (!this.voicesLoaded) {
+                        this.handleVoiceLoadingFallback();
+                    }
+                }, 3000);
+
+                try {
+                    await this.waitForVoices();
+                    this.renderVoiceSelector();
+                    this.selectBestVoice();
+                    this.ttsReady = true;
+                    this.updateTTSStatus('ready', `TTS ready - ${this.availableVoices.length} voices available`);
+                } catch (error) {
+                    this.handleVoiceLoadingFallback();
+                }
+            }
+
+            async waitForVoices() {
+                return new Promise((resolve, reject) => {
+                    let attempts = 0;
+                    const maxAttempts = 30;
+                    
+                    const checkVoices = () => {
+                        this.availableVoices = this.speechSynthesis.getVoices();
+                        attempts++;
+                        
+                        if (this.availableVoices.length > 0) {
+                            this.voicesLoaded = true;
+                            if (this.loadingTimeout) {
+                                clearTimeout(this.loadingTimeout);
+                            }
+                            resolve();
+                        } else if (attempts >= maxAttempts) {
+                            reject(new Error('Voices failed to load'));
+                        } else {
+                            setTimeout(checkVoices, 100);
+                        }
+                    };
+                    
+                    // Try immediately
+                    checkVoices();
+                    
+                    // Also listen for the voices changed event
+                    this.speechSynthesis.onvoiceschanged = checkVoices;
+                });
+            }
+
+            handleVoiceLoadingFallback() {
+                // Try one more time to get voices
+                this.availableVoices = this.speechSynthesis.getVoices();
+                
+                if (this.availableVoices.length > 0) {
+                    this.voicesLoaded = true;
+                    this.renderVoiceSelector();
+                    this.selectBestVoice();
+                    this.ttsReady = true;
+                    this.updateTTSStatus('ready', 'TTS ready (basic voices)');
+                } else {
+                    // Use system default
+                    this.voicesLoaded = true;
+                    this.ttsReady = true;
+                    this.updateTTSStatus('ready', 'TTS ready (using system default voice)');
+                    this.voiceList.innerHTML = '<div style="padding: 10px; text-align: center; color: #718096;">Using system default voice</div>';
+                }
+            }
+
+            updateTTSStatus(type, message) {
+                this.ttsStatus.className = `tts-status ${type}`;
+                this.ttsStatus.textContent = message;
             }
 
             renderVoiceSelector() {
                 if (this.availableVoices.length === 0) {
-                    this.voiceList.innerHTML = '<div>No voices available</div>';
+                    this.voiceList.innerHTML = '<div style="padding: 10px; text-align: center; color: #718096;">No additional voices found</div>';
                     return;
                 }
 
                 const currentLang = this.languageSelect.value;
                 
-                // Filter and group voices by language
-                const languageVoices = this.availableVoices.filter(voice => {
+                // Filter voices by language preference
+                const preferredVoices = this.availableVoices.filter(voice => {
                     const voiceLang = voice.lang.toLowerCase().substring(0, 2);
                     return voiceLang === currentLang;
                 });
@@ -613,14 +708,13 @@
                     radio.type = 'radio';
                     radio.name = 'voice';
                     radio.value = voice.name;
-                    radio.id = `voice-${voice.name}`;
+                    radio.id = `voice-${voice.name.replace(/[^a-zA-Z0-9]/g, '_')}`;
                     
                     const label = document.createElement('label');
                     label.htmlFor = radio.id;
-                    label.style.cursor = 'pointer';
-                    label.style.flex = '1';
+                    label.className = 'voice-option label';
                     
-                    const voiceName = voice.name.length > 30 ? voice.name.substring(0, 30) + '...' : voice.name;
+                    const voiceName = voice.name.length > 35 ? voice.name.substring(0, 35) + '...' : voice.name;
                     label.textContent = `${voiceName} (${voice.lang})${isRecommended ? ' ⭐' : ''}`;
                     
                     radio.addEventListener('change', () => {
@@ -636,19 +730,19 @@
                     return radio;
                 };
 
-                // Add current language voices first (recommended)
-                if (languageVoices.length > 0) {
-                    languageVoices.forEach(voice => addVoiceOption(voice, true));
+                // Add preferred language voices first
+                if (preferredVoices.length > 0) {
+                    preferredVoices.forEach(voice => addVoiceOption(voice, true));
                 }
 
                 // Add English voices as fallback
                 if (englishVoices.length > 0) {
-                    englishVoices.forEach(voice => addVoiceOption(voice, false));
+                    englishVoices.slice(0, 3).forEach(voice => addVoiceOption(voice, false));
                 }
 
-                // Add other voices
-                if (otherVoices.length > 0 && languageVoices.length === 0) {
-                    otherVoices.slice(0, 5).forEach(voice => addVoiceOption(voice, false));
+                // Add other high-quality voices
+                if (otherVoices.length > 0 && preferredVoices.length === 0) {
+                    otherVoices.slice(0, 3).forEach(voice => addVoiceOption(voice, false));
                 }
             }
 
@@ -657,38 +751,47 @@
 
                 const currentLang = this.languageSelect.value;
                 
-                // Try to find the best voice for the current language
-                let bestVoice = this.availableVoices.find(voice => {
+                // Look for high-quality voices (avoid 'Google' prefix as they're often robotic)
+                const highQualityVoices = this.availableVoices.filter(voice => 
+                    !voice.name.toLowerCase().includes('google') && 
+                    !voice.name.toLowerCase().includes('android') &&
+                    !voice.name.toLowerCase().includes('eSpeak')
+                );
+
+                // Try to find the best voice for current language
+                let bestVoice = highQualityVoices.find(voice => {
                     const voiceLang = voice.lang.toLowerCase();
-                    return voiceLang === this.mapLanguageCode(currentLang).toLowerCase() && !voice.name.includes('Google');
+                    return voiceLang === this.mapLanguageCode(currentLang).toLowerCase();
                 });
 
                 if (!bestVoice) {
-                    bestVoice = this.availableVoices.find(voice => {
-                        return voice.lang.toLowerCase().startsWith(currentLang) && !voice.name.includes('Google');
+                    bestVoice = highQualityVoices.find(voice => {
+                        return voice.lang.toLowerCase().startsWith(currentLang);
                     });
                 }
 
                 if (!bestVoice) {
-                    bestVoice = this.availableVoices.find(voice => {
-                        return voice.lang.toLowerCase().startsWith('en') && !voice.name.includes('Google');
+                    bestVoice = highQualityVoices.find(voice => {
+                        return voice.lang.toLowerCase().startsWith('en');
                     });
                 }
 
-                if (!bestVoice) {
-                    bestVoice = this.availableVoices.find(voice => !voice.name.includes('Google'));
+                if (!bestVoice && highQualityVoices.length > 0) {
+                    bestVoice = highQualityVoices[0];
                 }
 
-                if (!bestVoice) {
+                if (!bestVoice && this.availableVoices.length > 0) {
                     bestVoice = this.availableVoices[0];
                 }
 
-                this.selectedVoice = bestVoice;
+                if (bestVoice) {
+                    this.selectedVoice = bestVoice;
 
-                // Update radio button selection
-                const radio = document.querySelector(`input[value="${bestVoice.name}"]`);
-                if (radio) {
-                    radio.checked = true;
+                    // Update radio button selection
+                    const radio = document.querySelector(`input[value="${bestVoice.name}"]`);
+                    if (radio) {
+                        radio.checked = true;
+                    }
                 }
             }
 
@@ -701,23 +804,37 @@
                 this.languageSelect.addEventListener('change', () => this.updateLanguage());
                 this.digitsSelect.addEventListener('change', () => this.updateNumberRange());
                 
-                // Keyboard event listener
+                // Advanced toggle
+                this.advancedToggle.addEventListener('click', () => this.toggleAdvanced());
+                
+                // Keyboard events
                 document.addEventListener('keydown', (e) => this.handleKeyPress(e));
                 
-                // Validate number inputs
+                // Input validation
                 [this.minInput, this.maxInput].forEach(input => {
                     input.addEventListener('change', () => this.validateInputs());
                 });
             }
 
+            toggleAdvanced() {
+                if (this.advancedContent.classList.contains('active')) {
+                    this.advancedContent.classList.remove('active');
+                    this.advancedToggle.classList.remove('active');
+                } else {
+                    this.advancedContent.classList.add('active');
+                    this.advancedToggle.classList.add('active');
+                }
+            }
+
             handleKeyPress(event) {
+                // Ignore if typing in inputs
                 if (event.target.tagName === 'INPUT' || event.target.tagName === 'SELECT') {
                     return;
                 }
 
                 const key = event.key.toLowerCase();
                 
-                if (key === ' ') {
+                if (key === ' ' || key === 'spacebar') {
                     event.preventDefault();
                     this.handleSpacebarPress();
                 } else if (key === 'r') {
@@ -727,6 +844,11 @@
             }
 
             handleMainButtonClick() {
+                if (!this.ttsReady) {
+                    this.showError('TTS system is still loading. Please wait a moment.');
+                    return;
+                }
+
                 if (!this.hasGeneratedSequence || this.isSequenceRevealed) {
                     this.playRandomSequence();
                 } else {
@@ -739,149 +861,4 @@
             }
 
             handleRepeatKeyPress() {
-                if (this.currentSequence !== null) {
-                    this.repeatSequence();
-                }
-            }
-
-            updateNumberRange() {
-                const digits = this.digitsSelect.value;
-                
-                if (digits === 'custom') {
-                    this.customRangeSection.style.display = 'block';
-                } else {
-                    this.customRangeSection.style.display = 'none';
-                    
-                    const ranges = {
-                        '1': { min: 0, max: 9 },
-                        '2': { min: 10, max: 99 },
-                        '3': { min: 100, max: 999 },
-                        '4': { min: 1000, max: 9999 },
-                        '5': { min: 10000, max: 99999 }
-                    };
-                    
-                    if (ranges[digits]) {
-                        this.minInput.value = ranges[digits].min;
-                        this.maxInput.value = ranges[digits].max;
-                    }
-                }
-            }
-
-            validateInputs() {
-                const min = parseInt(this.minInput.value) || 0;
-                const max = parseInt(this.maxInput.value) || 100;
-                
-                if (min >= max) {
-                    this.maxInput.value = min + 1;
-                }
-            }
-
-            generateRandomSequence() {
-                const min = parseInt(this.minInput.value) || 0;
-                const max = parseInt(this.maxInput.value) || 100;
-                const sequence = [];
-                
-                for (let i = 0; i < this.sequenceLength; i++) {
-                    sequence.push(Math.floor(Math.random() * (max - min + 1)) + min);
-                }
-                
-                return sequence;
-            }
-
-            async stopCurrentAudio() {
-                this.isPlaying = false;
-                
-                if (this.speechSynthesis) {
-                    this.speechSynthesis.cancel();
-                }
-                
-                await this.sleep(100);
-            }
-
-            async playRandomSequence() {
-                await this.stopCurrentAudio();
-                this.hideError();
-                this.currentSequence = this.generateRandomSequence();
-                this.isSequenceRevealed = false;
-                this.hasGeneratedSequence = true;
-                this.clearDisplay();
-                this.enableButtons();
-                this.speakSequence();
-            }
-
-            async repeatSequence() {
-                if (this.currentSequence !== null) {
-                    await this.stopCurrentAudio();
-                    this.hideError();
-                    if (!this.isSequenceRevealed) {
-                        this.showSpeakingIndicator();
-                    }
-                    this.speakSequence();
-                }
-            }
-
-            revealSequence() {
-                if (this.currentSequence !== null) {
-                    this.isSequenceRevealed = true;
-                    this.showSequence(this.currentSequence);
-                    this.updateMainButtonText();
-                }
-            }
-
-            async speakSequence() {
-                if (this.currentSequence === null || !this.speechSynthesis) return;
-                
-                this.isPlaying = true;
-                
-                if (!this.isSequenceRevealed) {
-                    this.showSpeakingIndicator();
-                }
-                
-                try {
-                    await this.speakWithSpeechSynthesis();
-                } catch (e) {
-                    this.showError(`TTS Error: ${e.message || 'Unable to play audio'}`);
-                }
-                
-                this.isPlaying = false;
-                
-                if (!this.isSequenceRevealed) {
-                    this.hideSpeakingIndicator();
-                }
-            }
-
-            async speakWithSpeechSynthesis() {
-                if (!this.speechSynthesis) {
-                    throw new Error('Speech synthesis not supported');
-                }
-
-                // Wait for voices to load
-                if (!this.voicesLoaded) {
-                    await new Promise(resolve => {
-                        let attempts = 0;
-                        const checkVoices = () => {
-                            this.availableVoices = this.speechSynthesis.getVoices();
-                            if (this.availableVoices.length > 0 || attempts > 20) {
-                                this.voicesLoaded = true;
-                                this.selectBestVoice();
-                                resolve();
-                            } else {
-                                attempts++;
-                                setTimeout(checkVoices, 100);
-                            }
-                        };
-                        checkVoices();
-                    });
-                }
-
-                const speed = parseFloat(this.speedSlider.value);
-                
-                for (let i = 0; i < this.currentSequence.length && this.isPlaying; i++) {
-                    const number = this.currentSequence[i];
-                    
-                    await new Promise((resolve, reject) => {
-                        const utterance = new SpeechSynthesisUtterance(number.toString());
-                        
-                        // Configure utterance
-                        utterance.rate = Math.max(0.1, Math.min(2.0, speed));
-                        utterance.volume = 1
+                if (this.currentSequence !== null && this.
