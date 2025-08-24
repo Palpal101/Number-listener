@@ -28,6 +28,11 @@
             padding: 40px;
             max-width: 500px;
             width: 100%;
+            transition: transform 0.2s ease;
+        }
+
+        .app-container:hover {
+            transform: translateY(-2px);
         }
 
         .title {
@@ -36,6 +41,7 @@
             font-weight: 700;
             color: #2d3748;
             margin-bottom: 30px;
+            letter-spacing: -0.5px;
         }
 
         .form-group {
@@ -78,6 +84,7 @@
             border: 2px solid #e2e8f0;
             border-radius: 12px;
             font-size: 16px;
+            transition: all 0.2s ease;
             background: white;
             color: #2d3748;
         }
@@ -85,6 +92,11 @@
         .form-input:focus, .form-select:focus {
             outline: none;
             border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-input:hover, .form-select:hover {
+            border-color: #cbd5e0;
         }
 
         .button-row {
@@ -100,40 +112,106 @@
             font-size: 16px;
             font-weight: 600;
             cursor: pointer;
+            transition: all 0.2s ease;
             flex: 1;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
         }
 
         .btn-primary {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
         }
 
-        .btn-primary:hover:not(:disabled) {
-            opacity: 0.9;
+        .btn-primary:hover, .btn-primary:active {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
         }
 
         .btn-secondary {
-            background: #f7fafc;
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
             color: #4a5568;
             border: 2px solid #e2e8f0;
             flex: 0 0 25%;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
-        .btn-secondary:hover:not(:disabled) {
-            background: #edf2f7;
+        .btn-secondary:hover, .btn-secondary:active {
+            background: linear-gradient(135deg, #edf2f7 0%, #e2e8f0 100%);
+            border-color: #cbd5e0;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn-reveal {
+            background: linear-gradient(135deg, #38b2ac 0%, #319795 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(56, 178, 172, 0.3);
+            width: 100%;
+        }
+
+        .btn-reveal:hover, .btn-reveal:active {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(56, 178, 172, 0.4);
         }
 
         .btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .speed-control {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .speed-slider {
+            flex: 1;
+            -webkit-appearance: none;
+            appearance: none;
+            height: 6px;
+            background: #e2e8f0;
+            border-radius: 3px;
+            outline: none;
+        }
+
+        .speed-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #667eea;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(102, 126, 234, 0.3);
+        }
+
+        .speed-slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: #667eea;
+            border-radius: 50%;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 6px rgba(102, 126, 234, 0.3);
+        }
+
+        .speed-display {
+            min-width: 40px;
+            text-align: center;
+            font-weight: 600;
+            color: #4a5568;
         }
 
         .number-display {
-            background: #f7fafc;
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
             border: 2px dashed #cbd5e0;
             border-radius: 16px;
             padding: 30px 20px;
@@ -143,12 +221,14 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: all 0.3s ease;
         }
 
         .number-display.has-number {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border-color: #667eea;
+            transform: scale(1.02);
         }
 
         .number-text {
@@ -163,10 +243,43 @@
             font-size: 16px;
         }
 
+        .keyboard-hint {
+            margin-top: 20px;
+            padding: 15px;
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            border-radius: 10px;
+            text-align: center;
+            font-size: 14px;
+            color: #4a5568;
+            border: 1px solid #e2e8f0;
+        }
+
+        .keyboard-hint strong {
+            color: #2d3748;
+        }
+
+        .tts-method-selector {
+            margin-bottom: 20px;
+        }
+
+        .tts-method-selector label {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            cursor: pointer;
+            font-weight: normal;
+            text-transform: none;
+            letter-spacing: normal;
+        }
+
+        .tts-method-selector input[type="radio"] {
+            margin-right: 10px;
+        }
+
         .error-message {
             margin-top: 15px;
             padding: 12px 16px;
-            background: #fed7d7;
+            background: linear-gradient(135deg, #fed7d7 0%, #feb2b2 100%);
             border: 1px solid #fc8181;
             border-radius: 10px;
             color: #742a2a;
@@ -183,8 +296,8 @@
         }
 
         .toggle-header {
-            padding: 15px 16px;
-            background: #f7fafc;
+            padding: 12px 16px;
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
             cursor: pointer;
             display: flex;
             justify-content: space-between;
@@ -194,7 +307,7 @@
         }
 
         .toggle-header:hover {
-            background: #edf2f7;
+            background: linear-gradient(135deg, #edf2f7 0%, #e2e8f0 100%);
         }
 
         .toggle-content {
@@ -214,38 +327,9 @@
             transform: rotate(90deg);
         }
 
-        .speed-control {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .speed-slider {
-            flex: 1;
-            height: 6px;
-        }
-
-        .speed-display {
-            min-width: 40px;
-            text-align: center;
-            font-weight: 600;
-            color: #4a5568;
-        }
-
-        .keyboard-hint {
-            margin-top: 20px;
-            padding: 15px;
-            background: #f7fafc;
-            border-radius: 10px;
-            text-align: center;
-            font-size: 14px;
-            color: #4a5568;
-        }
-
         @media (max-width: 480px) {
             .app-container {
-                padding: 20px;
-                margin: 10px;
+                padding: 30px 20px;
             }
 
             .title {
@@ -263,6 +347,20 @@
             .input-row {
                 flex-direction: column;
                 gap: 10px;
+            }
+
+            .input-group {
+                width: 100%;
+            }
+
+            .input-group label,
+            .form-input,
+            .form-select {
+                text-align: left;
+            }
+
+            .number-text {
+                font-size: 28px;
             }
         }
     </style>
@@ -301,56 +399,73 @@
             </div>
         </div>
 
+        
+
         <div class="form-group">
             <label for="language" class="form-label">Language</label>
             <select id="language" class="form-select">
-                <option value="en-US">English</option>
-                <option value="fr-FR">French</option>
-                <option value="de-DE">German</option>
-                <option value="it-IT">Italian</option>
-                <option value="pl-PL">Polish</option>
-                <option value="es-ES">Spanish</option>
+                <option value="en">English</option>
+                <option value="fr">French</option>
+                <option value="de">German</option>
+                <option value="it">Italian</option>
+                <option value="pl">Polish</option>
+                <option value="es">Spanish</option>
             </select>
         </div>
 
         <div class="toggle-section">
-            <div class="toggle-header" onclick="toggleAdvanced()">
+            <div class="toggle-header" onclick="toggleSection('advanced')">
                 <span>Advanced settings</span>
                 <span class="toggle-arrow">▶</span>
             </div>
             <div class="toggle-content" id="advancedContent">
+                <div class="form-group tts-method-selector">
+                    <div class="form-label">TTS Method</div>
+                    <label>
+                        <input type="radio" name="ttsMethod" value="speechSynthesis" checked>
+                        Browser TTS (Recommended for mobile)
+                    </label>
+                    <label>
+                        <input type="radio" name="ttsMethod" value="google">
+                        Google TTS (May not work on all browsers)
+                    </label>
+					
+					
+                </div>
+
                 <div class="form-group">
-                    <label class="form-label">Speech Speed</label>
+                    <label class="form-label">TTS Speed</label>
                     <div class="speed-control">
-                        <input type="range" id="speedSlider" class="speed-slider" min="0.3" max="1.5" step="0.1" value="0.8">
-                        <span id="speedDisplay" class="speed-display">0.8x</span>
+                        <input type="range" id="speedSlider" class="speed-slider" min="0.5" max="2" step="0.1" value="1">
+                        <span id="speedDisplay" class="speed-display">1x</span>
                     </div>
                 </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Sequence Length</label>
-                    <div class="speed-control">
-                        <input type="range" id="sequenceSlider" class="speed-slider" min="1" max="10" step="1" value="1">
-                        <span id="sequenceDisplay" class="speed-display">1</span>
-                    </div>
-                </div>
-                
-                <div class="form-group" id="delaySection" style="display: none;">
-                    <label class="form-label">Delay Between Numbers (seconds)</label>
-                    <div class="speed-control">
-                        <input type="range" id="delaySlider" class="speed-slider" min="0.5" max="3" step="0.1" value="1">
-                        <span id="delayDisplay" class="speed-display">1.0s</span>
-                    </div>
-                </div>
+				
+				
+				<div class="form-group">
+					<label class="form-label">Sequence Length</label>
+					<div class="speed-control">
+						<input type="range" id="sequenceSlider" class="speed-slider" min="1" max="10" step="1" value="1">
+						<span id="sequenceDisplay" class="speed-display">1</span>
+					</div>
+				</div>
+				
+				<div class="form-group" id="delaySection">
+					<label class="form-label">Delay Between Numbers</label>
+					<div class="speed-control">
+						<input type="range" id="delaySlider" class="speed-slider" min="0.5" max="3" step="0.1" value="1">
+						<span id="delayDisplay" class="speed-display">1x</span>
+					</div>
+				</div>
             </div>
         </div>
 
         <div class="button-row">
-            <button id="mainBtn" class="btn btn-primary">
+            <button id="mainBtn" class="btn btn-primary" aria-label="Play a random number">
                 🔊 Play random number
             </button>
-            <button id="repeatBtn" class="btn btn-secondary" disabled>
-                🔄 Repeat
+            <button id="repeatBtn" class="btn btn-secondary" disabled aria-label="Repeat the current number sequence">
+                🔁 Repeat
             </button>
         </div>
 
@@ -366,38 +481,9 @@
     </div>
 
     <script>
-        let currentSequence = null;
-        let isSequenceRevealed = false;
-        let hasGeneratedSequence = false;
-        let isPlaying = false;
-        let sequenceLength = 1;
-        let speechSpeed = 0.8;
-        let delayBetweenNumbers = 1000;
-
-        // Initialize
-        document.addEventListener('DOMContentLoaded', function() {
-            updateSliderDisplays();
-            updateNumberRange();
-            bindEvents();
-        });
-
-        function bindEvents() {
-            document.getElementById('mainBtn').addEventListener('click', handleMainButton);
-            document.getElementById('repeatBtn').addEventListener('click', repeatSequence);
-            document.getElementById('speedSlider').addEventListener('input', updateSpeed);
-            document.getElementById('sequenceSlider').addEventListener('input', updateSequenceLength);
-            document.getElementById('delaySlider').addEventListener('input', updateDelay);
-            document.getElementById('digits').addEventListener('change', updateNumberRange);
-            document.addEventListener('keydown', handleKeyPress);
-            
-            // Input validation
-            document.getElementById('minNumber').addEventListener('change', validateInputs);
-            document.getElementById('maxNumber').addEventListener('change', validateInputs);
-        }
-
-        function toggleAdvanced() {
-            const content = document.getElementById('advancedContent');
-            const header = document.querySelector('.toggle-header');
+        function toggleSection(sectionName) {
+            const content = document.getElementById(sectionName + 'Content');
+            const header = content.previousElementSibling;
             
             if (content.classList.contains('active')) {
                 content.classList.remove('active');
@@ -408,266 +494,527 @@
             }
         }
 
-        function updateSliderDisplays() {
-            updateSpeed();
-            updateSequenceLength();
-            updateDelay();
-        }
-
-        function updateSpeed() {
-            const slider = document.getElementById('speedSlider');
-            const display = document.getElementById('speedDisplay');
-            speechSpeed = parseFloat(slider.value);
-            display.textContent = speechSpeed + 'x';
-        }
-
-        function updateSequenceLength() {
-            const slider = document.getElementById('sequenceSlider');
-            const display = document.getElementById('sequenceDisplay');
-            sequenceLength = parseInt(slider.value);
-            display.textContent = sequenceLength.toString();
+        class NumberListeningApp {
+            constructor() {
+                this.currentSequence = null;
+                this.currentSpeed = 1;
+                this.currentLanguage = 'en';
+                this.sequenceLength = 1;
+                this.delayBetweenNumbers = 500; // Base delay for 1x multiplier (accounting for natural speech pause)
+                this.isSequenceRevealed = false;
+                this.isPlaying = false;
+                this.currentAudioQueue = [];
+                this.hasGeneratedSequence = false;
+                this.ttsMethod = 'speechSynthesis';
+                this.speechSynthesis = window.speechSynthesis;
+                this.availableVoices = [];
+                this.voicesLoaded = false;
+                this.initializeElements();
+                this.initializeVoices();
+                this.bindEvents();
+                this.updateButtonTexts();
+                this.updateNumberRange();
+                this.toggleDelaySection(); // Initialize delay section visibility
+                this.initializeSliderDisplays(); // Fix initial slider positions
+            }
             
-            // Show/hide delay section
-            const delaySection = document.getElementById('delaySection');
-            delaySection.style.display = sequenceLength > 1 ? 'block' : 'none';
-            
-            updateButtonTexts();
-        }
+            initializeSliderDisplays() {
+                // Ensure all slider displays match their initial values
+                this.updateSpeed();
+                this.updateSequenceLength();
+                this.updateDelay();
+            }
 
-        function updateDelay() {
-            const slider = document.getElementById('delaySlider');
-            const display = document.getElementById('delayDisplay');
-            const value = parseFloat(slider.value);
-            delayBetweenNumbers = value * 1000; // Convert to milliseconds
-            display.textContent = value.toFixed(1) + 's';
-        }
+            initializeElements() {
+            }
 
-        function updateNumberRange() {
-            const digits = document.getElementById('digits').value;
-            const customSection = document.getElementById('customRangeSection');
-            const minInput = document.getElementById('minNumber');
-            const maxInput = document.getElementById('maxNumber');
-            
-            if (digits === 'custom') {
-                customSection.style.display = 'block';
-            } else {
-                customSection.style.display = 'none';
-                
-                const ranges = {
-                    '1': { min: 0, max: 9 },
-                    '2': { min: 10, max: 99 },
-                    '3': { min: 100, max: 999 },
-                    '4': { min: 1000, max: 9999 },
-                    '5': { min: 10000, max: 99999 }
-                };
-                
-                if (ranges[digits]) {
-                    minInput.value = ranges[digits].min;
-                    maxInput.value = ranges[digits].max;
+            initializeVoices() {
+                // Handle voices loading for speechSynthesis
+                if (this.speechSynthesis) {
+                    const loadVoices = () => {
+                        this.availableVoices = this.speechSynthesis.getVoices();
+                        this.voicesLoaded = this.availableVoices.length > 0;
+                    };
+                    
+                    // Load voices immediately if available
+                    loadVoices();
+                    
+                    // Also listen for voices changed event (required for Chrome)
+                    this.speechSynthesis.onvoiceschanged = loadVoices;
                 }
             }
-        }
 
-        function validateInputs() {
-            const minInput = document.getElementById('minNumber');
-            const maxInput = document.getElementById('maxNumber');
-            const min = parseInt(minInput.value) || 0;
-            const max = parseInt(maxInput.value) || 100;
-            
-            if (min >= max) {
-                maxInput.value = min + 1;
+            initializeElements() {
+                this.digitsSelect = document.getElementById('digits');
+                this.minInput = document.getElementById('minNumber');
+                this.maxInput = document.getElementById('maxNumber');
+                this.languageSelect = document.getElementById('language');
+                this.mainBtn = document.getElementById('mainBtn');
+                this.repeatBtn = document.getElementById('repeatBtn');
+                this.speedSlider = document.getElementById('speedSlider');
+                this.speedDisplay = document.getElementById('speedDisplay');
+                this.sequenceSlider = document.getElementById('sequenceSlider');
+                this.sequenceDisplay = document.getElementById('sequenceDisplay');
+                this.delaySlider = document.getElementById('delaySlider');
+                this.delayDisplay = document.getElementById('delayDisplay');
+                this.delaySection = document.getElementById('delaySection');
+                this.numberDisplay = document.getElementById('numberDisplay');
+                this.errorMessage = document.getElementById('errorMessage');
+                this.ttsMethodRadios = document.querySelectorAll('input[name="ttsMethod"]');
+                this.customRangeSection = document.getElementById('customRangeSection');
             }
-        }
 
-        function updateButtonTexts() {
-            const mainBtn = document.getElementById('mainBtn');
-            
-            if (!hasGeneratedSequence || isSequenceRevealed) {
-                if (sequenceLength === 1) {
-                    mainBtn.innerHTML = '🔊 Play random number';
+            bindEvents() {
+                this.mainBtn.addEventListener('click', () => this.handleMainButtonClick());
+                this.repeatBtn.addEventListener('click', () => this.repeatSequence());
+                this.speedSlider.addEventListener('input', () => this.updateSpeed());
+                this.sequenceSlider.addEventListener('input', () => this.updateSequenceLength());
+                this.delaySlider.addEventListener('input', () => this.updateDelay());
+                this.languageSelect.addEventListener('change', () => this.updateLanguage());
+                this.digitsSelect.addEventListener('change', () => this.updateNumberRange());
+                
+                // TTS method selection
+                this.ttsMethodRadios.forEach(radio => {
+                    radio.addEventListener('change', (e) => {
+                        if (e.target.checked) {
+                            this.ttsMethod = e.target.value;
+                        }
+                    });
+                });
+                
+                // Keyboard event listener
+                document.addEventListener('keydown', (e) => this.handleKeyPress(e));
+                
+                // Validate number inputs
+                [this.minInput, this.maxInput].forEach(input => {
+                    input.addEventListener('change', () => this.validateInputs());
+                });
+            }
+
+            handleKeyPress(event) {
+                if (event.target.tagName === 'INPUT' || event.target.tagName === 'SELECT') {
+                    return;
+                }
+
+                const key = event.key.toLowerCase();
+                
+                if (key === ' ') {
+                    event.preventDefault(); // Prevent scroll first
+                    this.handleSpacebarPress();
+                } else if (key === 'r') {
+                    event.preventDefault();
+                    this.handleRepeatKeyPress();
+                }
+            }
+
+            handleMainButtonClick() {
+                if (!this.hasGeneratedSequence || this.isSequenceRevealed) {
+                    // Generate and play new sequence
+                    this.playRandomSequence();
                 } else {
-                    mainBtn.innerHTML = '🔊 Play random sequence';
+                    // Reveal current sequence
+                    this.revealSequence();
                 }
-            } else {
-                if (sequenceLength === 1) {
-                    mainBtn.innerHTML = '👁️ Reveal number';
+            }
+
+            handleSpacebarPress() {
+                this.handleMainButtonClick();
+            }
+
+            handleRepeatKeyPress() {
+                if (this.currentSequence !== null) {
+                    this.repeatSequence();
+                }
+            }
+
+            updateNumberRange() {
+                const digits = this.digitsSelect.value;
+                
+                if (digits === 'custom') {
+                    this.customRangeSection.style.display = 'block';
                 } else {
-                    mainBtn.innerHTML = '👁️ Reveal sequence';
+                    // Hide custom range section completely
+                    this.customRangeSection.style.display = 'none';
+                    
+                    // Set predefined ranges
+                    const ranges = {
+                        '1': { min: 0, max: 9 },
+                        '2': { min: 10, max: 99 },
+                        '3': { min: 100, max: 999 },
+                        '4': { min: 1000, max: 9999 },
+                        '5': { min: 10000, max: 99999 }
+                    };
+                    
+                    if (ranges[digits]) {
+                        this.minInput.value = ranges[digits].min;
+                        this.maxInput.value = ranges[digits].max;
+                    }
                 }
             }
-        }
 
-        function handleKeyPress(event) {
-            if (event.target.tagName === 'INPUT' || event.target.tagName === 'SELECT') {
-                return;
-            }
-
-            const key = event.key.toLowerCase();
-            
-            if (key === ' ' || key === 'spacebar') {
-                event.preventDefault();
-                handleMainButton();
-            } else if (key === 'r') {
-                event.preventDefault();
-                if (currentSequence !== null) {
-                    repeatSequence();
+            validateInputs() {
+                const min = parseInt(this.minInput.value) || 0;
+                const max = parseInt(this.maxInput.value) || 100;
+                
+                if (min >= max) {
+                    this.maxInput.value = min + 1;
                 }
             }
-        }
 
-        function handleMainButton() {
-            if (!hasGeneratedSequence || isSequenceRevealed) {
-                playRandomSequence();
-            } else {
-                revealSequence();
-            }
-        }
-
-        function generateRandomSequence() {
-            const minInput = document.getElementById('minNumber');
-            const maxInput = document.getElementById('maxNumber');
-            const min = parseInt(minInput.value) || 0;
-            const max = parseInt(maxInput.value) || 100;
-            const sequence = [];
-            
-            for (let i = 0; i < sequenceLength; i++) {
-                sequence.push(Math.floor(Math.random() * (max - min + 1)) + min);
-            }
-            
-            return sequence;
-        }
-
-        async function playRandomSequence() {
-            if (isPlaying) return;
-            
-            hideError();
-            currentSequence = generateRandomSequence();
-            isSequenceRevealed = false;
-            hasGeneratedSequence = true;
-            
-            showSpeakingIndicator();
-            updateButtonTexts();
-            enableRepeatButton();
-            
-            await speakSequence();
-        }
-
-        async function repeatSequence() {
-            if (currentSequence === null || isPlaying) return;
-            
-            hideError();
-            if (!isSequenceRevealed) {
-                showSpeakingIndicator();
-            }
-            
-            await speakSequence();
-        }
-
-        function revealSequence() {
-            if (currentSequence !== null) {
-                isSequenceRevealed = true;
-                showSequence(currentSequence);
-                updateButtonTexts();
-            }
-        }
-
-        async function speakSequence() {
-            if (!currentSequence || !window.speechSynthesis) {
-                showError('Speech synthesis not supported');
-                return;
-            }
-            
-            isPlaying = true;
-            
-            try {
-                const languageSelect = document.getElementById('language');
-                const language = languageSelect.value;
+            generateRandomSequence() {
+                const min = parseInt(this.minInput.value) || 0;
+                const max = parseInt(this.maxInput.value) || 100;
+                const sequence = [];
                 
-                // Stop any current speech
-                window.speechSynthesis.cancel();
+                for (let i = 0; i < this.sequenceLength; i++) {
+                    sequence.push(Math.floor(Math.random() * (max - min + 1)) + min);
+                }
                 
-                // Wait a bit for the cancel to take effect
-                await sleep(100);
+                return sequence;
+            }
+
+            async stopCurrentAudio() {
+                this.isPlaying = false;
                 
-                for (let i = 0; i < currentSequence.length && isPlaying; i++) {
-                    const number = currentSequence[i];
+                // Stop speech synthesis
+                if (this.speechSynthesis) {
+                    this.speechSynthesis.cancel();
+                }
+                
+                // Stop Google TTS audio
+                this.currentAudioQueue.forEach(audio => {
+                    if (audio && !audio.paused) {
+                        audio.pause();
+                        audio.currentTime = 0;
+                    }
+                });
+                this.currentAudioQueue = [];
+                
+                // Small delay to ensure everything stops
+                await this.sleep(50);
+            }
+
+            async playRandomSequence() {
+                await this.stopCurrentAudio();
+                this.hideError();
+                this.currentSequence = this.generateRandomSequence();
+                this.isSequenceRevealed = false;
+                this.hasGeneratedSequence = true;
+                this.clearDisplay();
+                this.enableButtons();
+                this.speakSequence();
+            }
+
+            async repeatSequence() {
+                if (this.currentSequence !== null) {
+                    await this.stopCurrentAudio();
+                    this.hideError();
+                    if (!this.isSequenceRevealed) {
+                        this.showSpeakingIndicator();
+                    }
+                    this.speakSequence();
+                }
+            }
+
+            revealSequence() {
+                if (this.currentSequence !== null) {
+                    this.isSequenceRevealed = true;
+                    this.showSequence(this.currentSequence);
+                    this.updateMainButtonText(); // Update button to show "Play" again
+                }
+            }
+
+            async speakSequence() {
+                if (this.currentSequence === null) return;
+                
+                this.isPlaying = true;
+                
+                if (!this.isSequenceRevealed) {
+                    this.showSpeakingIndicator();
+                }
+                
+                try {
+                    if (this.ttsMethod === 'speechSynthesis') {
+                        await this.speakWithSpeechSynthesis();
+                    } else {
+                        await this.speakWithGoogleTTS();
+                    }
+                } catch (e) {
+                    this.showError(`TTS Error: ${e.message || 'Unable to play audio. Try switching TTS method.'}`);
+                }
+                
+                this.isPlaying = false;
+                
+                if (!this.isSequenceRevealed) {
+                    this.hideSpeakingIndicator();
+                }
+            }
+
+            async speakWithSpeechSynthesis() {
+                if (!this.speechSynthesis) {
+                    throw new Error('Browser TTS not supported');
+                }
+
+                // Wait for voices to load if they haven't yet
+                if (!this.voicesLoaded) {
+                    await new Promise(resolve => {
+                        if (this.availableVoices.length > 0) {
+                            resolve();
+                        } else {
+                            this.speechSynthesis.onvoiceschanged = () => {
+                                this.availableVoices = this.speechSynthesis.getVoices();
+                                this.voicesLoaded = true;
+                                resolve();
+                            };
+                        }
+                    });
+                }
+
+                const lang = this.languageSelect.value;
+                const speed = parseFloat(this.speedSlider.value);
+                
+                for (let i = 0; i < this.currentSequence.length && this.isPlaying; i++) {
+                    const number = this.currentSequence[i];
                     
                     await new Promise((resolve, reject) => {
                         const utterance = new SpeechSynthesisUtterance(number.toString());
                         
-                        utterance.lang = language;
-                        utterance.rate = Math.max(0.1, Math.min(2.0, speechSpeed));
+                        utterance.lang = this.mapLanguageCode(lang);
+                        utterance.rate = speed;
                         utterance.volume = 1;
                         utterance.pitch = 1;
                         
+                        // Use pre-loaded voices
+                        const voice = this.availableVoices.find(v => v.lang.startsWith(lang)) || 
+                                    this.availableVoices.find(v => v.lang.startsWith('en')) ||
+                                    this.availableVoices[0];
+                        
+                        if (voice) {
+                            utterance.voice = voice;
+                        }
+                        
                         utterance.onend = () => {
-                            if (i < currentSequence.length - 1) {
-                                setTimeout(resolve, delayBetweenNumbers);
+                            if (i < this.currentSequence.length - 1) {
+                                // Don't subtract from delay since we've already accounted for natural pause
+                                setTimeout(resolve, this.delayBetweenNumbers);
                             } else {
-                                setTimeout(resolve, 100);
+                                setTimeout(resolve, 50);
                             }
                         };
                         
                         utterance.onerror = (e) => {
-                            console.error('Speech error:', e);
-                            reject(new Error('Speech failed'));
+                            reject(new Error(`Speech synthesis error: ${e.error}`));
                         };
                         
-                        if (!isPlaying) {
+                        if (!this.isPlaying) {
                             resolve();
                             return;
                         }
                         
-                        window.speechSynthesis.speak(utterance);
+                        this.speechSynthesis.speak(utterance);
                     });
                 }
-            } catch (error) {
-                showError('Speech failed: ' + error.message);
-            } finally {
-                isPlaying = false;
-                if (!isSequenceRevealed) {
-                    hideSpeakingIndicator();
+            }
+
+            async speakWithGoogleTTS() {
+                const lang = this.languageSelect.value;
+                const speed = parseFloat(this.speedSlider.value);
+                
+                for (let i = 0; i < this.currentSequence.length && this.isPlaying; i++) {
+                    const number = this.currentSequence[i];
+                    const url = `https://translate.google.com/translate_tts?ie=UTF-8&q=${encodeURIComponent(number)}&tl=${lang}&client=tw-ob`;
+                    
+                    try {
+                        await this.playAudioWithPromise(url, speed);
+                        if (i < this.currentSequence.length - 1 && this.isPlaying) {
+                            await this.sleep(this.delayBetweenNumbers);
+                        }
+                    } catch (e) {
+                        throw new Error('Google TTS failed to load audio');
+                    }
                 }
+            }
+
+            mapLanguageCode(code) {
+                const mapping = {
+                    'en': 'en-US',
+                    'fr': 'fr-FR',
+                    'de': 'de-DE',
+                    'it': 'it-IT',
+                    'pl': 'pl-PL',
+                    'es': 'es-ES'
+                };
+                return mapping[code] || 'en-US';
+            }
+
+            playAudioWithPromise(url, speed) {
+                return new Promise((resolve, reject) => {
+                    if (!this.isPlaying) {
+                        resolve();
+                        return;
+                    }
+                    
+                    const audio = new Audio(url);
+                    audio.playbackRate = speed;
+                    
+                    this.currentAudioQueue.push(audio);
+                    
+                    const cleanup = () => {
+                        const index = this.currentAudioQueue.indexOf(audio);
+                        if (index > -1) {
+                            this.currentAudioQueue.splice(index, 1);
+                        }
+                    };
+                    
+                    audio.addEventListener('ended', () => {
+                        cleanup();
+                        resolve();
+                    });
+                    
+                    audio.addEventListener('error', (e) => {
+                        cleanup();
+                        reject(e);
+                    });
+                    
+                    audio.play().catch(reject);
+                });
+            }
+
+            sleep(ms) {
+                return new Promise(resolve => setTimeout(resolve, ms));
+            }
+
+            showSpeakingIndicator() {
+                this.numberDisplay.textContent = '';
+                const span = document.createElement('span');
+                span.className = 'placeholder-text';
+                span.textContent = '🔊 Speaking...';
+                this.numberDisplay.appendChild(span);
+            }
+
+            hideSpeakingIndicator() {
+                const text = this.sequenceLength === 1 ? 'Number' : 'Sequence';
+                this.numberDisplay.textContent = '';
+                const span = document.createElement('span');
+                span.className = 'placeholder-text';
+                span.textContent = `${text} spoken - click "Reveal" to see it`;
+                this.numberDisplay.appendChild(span);
+            }
+
+            showSequence(sequence) {
+                const displayText = sequence.join(' - ');
+                this.numberDisplay.textContent = '';
+                const span = document.createElement('span');
+                span.className = 'number-text';
+                span.textContent = displayText;
+                this.numberDisplay.appendChild(span);
+                this.numberDisplay.classList.add('has-number');
+            }
+
+            clearDisplay() {
+                this.isSequenceRevealed = false;
+                const text = this.sequenceLength === 1 ? 'number' : 'sequence';
+                this.numberDisplay.textContent = '';
+                const span = document.createElement('span');
+                span.className = 'placeholder-text';
+                span.textContent = `Listen to the ${text}...`;
+                this.numberDisplay.appendChild(span);
+                this.numberDisplay.classList.remove('has-number');
+            }
+
+            enableButtons() {
+                this.repeatBtn.disabled = false;
+                this.updateMainButtonText();
+            }
+
+            updateMainButtonText() {
+                if (!this.hasGeneratedSequence || this.isSequenceRevealed) {
+                    // Show play button
+                    if (this.sequenceLength === 1) {
+                        this.mainBtn.innerHTML = '🔊 Play random number';
+                        this.mainBtn.setAttribute('aria-label', 'Play a random number');
+                    } else {
+                        this.mainBtn.innerHTML = '🔊 Play random sequence';
+                        this.mainBtn.setAttribute('aria-label', 'Play a random number sequence');
+                    }
+                } else {
+                    // Show reveal button
+                    if (this.sequenceLength === 1) {
+                        this.mainBtn.innerHTML = '👁️ Reveal number';
+                        this.mainBtn.setAttribute('aria-label', 'Show the current number');
+                    } else {
+                        this.mainBtn.innerHTML = '👁️ Reveal sequence';
+                        this.mainBtn.setAttribute('aria-label', 'Show the current number sequence');
+                    }
+                }
+            }
+
+            updateSpeed() {
+                this.currentSpeed = parseFloat(this.speedSlider.value);
+                this.speedDisplay.textContent = `${this.currentSpeed}x`;
+            }
+
+            updateSequenceLength() {
+                this.sequenceLength = parseInt(this.sequenceSlider.value);
+                this.sequenceDisplay.textContent = this.sequenceLength.toString();
+                this.updateButtonTexts();
+                this.updateInitialDisplay();
+                this.toggleDelaySection();
+            }
+
+            toggleDelaySection() {
+                if (this.sequenceLength === 1) {
+                    this.delaySection.style.display = 'none';
+                } else {
+                    this.delaySection.style.display = 'block';
+                }
+            }
+
+            updateDelay() {
+                const multiplier = parseFloat(this.delaySlider.value);
+                // Map multipliers to actual delay values that account for natural speech pause
+                if (multiplier <= 0.5) {
+                    this.delayBetweenNumbers = 0; // 0.5x = no additional delay (just natural pause)
+                } else {
+                    // Scale from 0ms (0.5x) to 2000ms (3x) 
+                    this.delayBetweenNumbers = Math.round((multiplier - 0.5) * 800); // 2.5 range * 800 = 2000ms max
+                }
+                this.delayDisplay.textContent = `${multiplier}x`;
+            }
+
+            updateButtonTexts() {
+                // This method now just updates the main button
+                this.updateMainButtonText();
+            }
+
+            updateInitialDisplay() {
+                if (!this.hasGeneratedSequence) {
+                    const text = this.sequenceLength === 1 ? 'number' : 'sequence';
+                    this.numberDisplay.textContent = '';
+                    const span = document.createElement('span');
+                    span.className = 'placeholder-text';
+                    span.textContent = `Press "Play random ${text}" to start`;
+                    this.numberDisplay.appendChild(span);
+                }
+            }
+
+            updateLanguage() {
+                this.currentLanguage = this.languageSelect.value;
+            }
+
+            showError(message) {
+                this.errorMessage.textContent = message;
+                this.errorMessage.style.display = 'block';
+            }
+
+            hideError() {
+                this.errorMessage.style.display = 'none';
             }
         }
 
-        function sleep(ms) {
-            return new Promise(resolve => setTimeout(resolve, ms));
-        }
-
-        function showSpeakingIndicator() {
-            const display = document.getElementById('numberDisplay');
-            display.innerHTML = '<span class="placeholder-text">🔊 Speaking...</span>';
-            display.classList.remove('has-number');
-        }
-
-        function hideSpeakingIndicator() {
-            const display = document.getElementById('numberDisplay');
-            const text = sequenceLength === 1 ? 'Number' : 'Sequence';
-            display.innerHTML = `<span class="placeholder-text">${text} spoken - click "Reveal" to see it</span>`;
-            display.classList.remove('has-number');
-        }
-
-        function showSequence(sequence) {
-            const display = document.getElementById('numberDisplay');
-            const displayText = sequence.join(' - ');
-            display.innerHTML = `<span class="number-text">${displayText}</span>`;
-            display.classList.add('has-number');
-        }
-
-        function enableRepeatButton() {
-            document.getElementById('repeatBtn').disabled = false;
-        }
-
-        function showError(message) {
-            const errorDiv = document.getElementById('errorMessage');
-            errorDiv.textContent = message;
-            errorDiv.style.display = 'block';
-        }
-
-        function hideError() {
-            document.getElementById('errorMessage').style.display = 'none';
-        }
+        document.addEventListener('DOMContentLoaded', () => {
+            new NumberListeningApp();
+        });
     </script>
 </body>
 </html>
